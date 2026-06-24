@@ -1,3 +1,6 @@
+using HelpdeskApi.Models;
+using System.Collections.Generic;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -32,6 +35,35 @@ app.MapGet("/weatherforecast", () =>
     return forecast;
 })
 .WithName("GetWeatherForecast");
+
+
+var tickets = new List<Ticket>
+{
+    new Ticket
+    {
+        Id = 1,
+        Title = "Drucker funktioniert nicht",
+        Description = "Der Drucker im 2. Stock reagiert nicht",
+        Status = "Open",
+        Priority = "High",
+        CreatedBy = "Semih",
+        CreatedAt = DateTime.Now
+    },
+    new Ticket
+    {
+        Id = 2,
+        Title = "Passwort vergessen",
+        Description = "User kann sich nicht anmelden",
+        Status = "In Progress",
+        Priority = "Medium",
+        CreatedBy = "IT Support",
+        CreatedAt = DateTime.Now
+    }
+};
+app.MapGet("/tickets", () =>
+{
+    return tickets;
+});
 
 app.MapGet("/", () => "Helpdesk API läuft");
 
