@@ -135,6 +135,22 @@ app.MapPost("/tickets/set", (TicketCreateRequest request) =>
 });
 
 
+app.MapPut("/tickets/{id}", (int id, TicketUpdateRequest request) =>
+{
+    var ticket = tickets.FirstOrDefault(t => t.Id == id);
+    if (ticket is null)
+    {
+        return Results.NotFound(new { message = "Ticket nicht gefunden" });
+    }
+
+    ticket.Title = request.Title ?? ticket.Title;
+    ticket.Description = request.Description ?? ticket.Description;
+    ticket.Status = request.Status ?? ticket.Status;
+    ticket.Priority = request.Priority ?? ticket.Priority;
+
+    return Results.Ok(ticket);
+});
+
 app.MapGet("/", () => "Helpdesk API läuft");
 
 app.Run();
