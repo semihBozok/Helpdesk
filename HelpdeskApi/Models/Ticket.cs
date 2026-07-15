@@ -7,7 +7,7 @@ namespace HelpdeskApi.Models
         private string _description;
         private string _status;
         private string _priority;
-        private string _createdBy;
+        private string? _createdBy;
         private DateTime _createdAt;
         private DateTime? _updatedAt;
 

@@ -89,7 +89,7 @@ app.MapGet("/tickets",() =>
 app.MapGet("/tickets/{id}", (int id) =>
 {
     var ticket = tickets.FirstOrDefault(t => t.Id == id);
-    return ticket is null ? Results.NotFound() : Results.Ok(ticket);
+    return ticket is null ? Results.NotFound(new { message = "Ticket nicht gefunden" }) : Results.Ok(ticket);
 });
 
 app.MapGet("/open",()=>
@@ -116,6 +116,24 @@ app.MapGet("tickets/critical",() =>
     } 
     return crit;
 });
+app.MapPost("/tickets/set", (TicketCreateRequest request) =>
+{
+    var newTicket = new Ticket
+    {
+        Id = tickets.Count + 1,
+        Title = request.Title,
+        Description = request.Description,
+        Priority = request.Priority,
+        Status = "Open",
+        CreatedBy = request.CreatedBy,
+        CreatedAt = DateTime.Now
+    };
+
+    tickets.Add(newTicket);
+
+    return Results.Ok(newTicket);
+});
+
 
 app.MapGet("/", () => "Helpdesk API läuft");
 
