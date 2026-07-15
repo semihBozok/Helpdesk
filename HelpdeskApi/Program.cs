@@ -1,5 +1,6 @@
 using HelpdeskApi.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,7 +64,7 @@ var tickets = new List<Ticket>
 };
 
 
-app.MapGet("/ticketshigh",() =>
+app.MapGet("/high",() =>
 {
     
 var hightickets = new List<Ticket>(); 
@@ -78,6 +79,43 @@ var hightickets = new List<Ticket>();
 return hightickets; 
 });
 
+
+app.MapGet("/tickets",() =>
+{
+    return tickets; 
+});
+
+
+app.MapGet("/tickets/{id}", (int id) =>
+{
+    var ticket = tickets.FirstOrDefault(t => t.Id == id);
+    return ticket is null ? Results.NotFound() : Results.Ok(ticket);
+});
+
+app.MapGet("/open",()=>
+{
+    var open = new List<Ticket>();
+    foreach(var t in tickets)
+    {
+        if(t.Status=="Open")
+        open.Add(t);
+    }
+    return open; 
+});
+
+
+app.MapGet("tickets/critical",() =>
+{
+    var crit = new List<Ticket>(); 
+    foreach (var t in tickets)
+    {
+    
+        if (t.Priority == "Critical")
+        crit.Add(t);
+
+    } 
+    return crit;
+});
 
 app.MapGet("/", () => "Helpdesk API läuft");
 
