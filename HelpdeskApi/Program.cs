@@ -1,11 +1,24 @@
 using HelpdeskApi.Models;
 using System.Collections.Generic;
 using System.Linq;
+using HelpdeskApi.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
+
+var connectionString =
+    builder.Configuration.GetConnectionString("HelpdeskDb")
+    ?? throw new InvalidOperationException(
+        "Connection String 'HelpdeskDb' wurde nicht gefunden.");
+
+builder.Services.AddDbContext<HelpdeskDbContext>(options =>
+    options.UseNpgsql(connectionString));
+
+    
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
