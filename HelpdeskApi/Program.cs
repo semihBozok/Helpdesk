@@ -18,7 +18,7 @@ var connectionString =
 builder.Services.AddDbContext<HelpdeskDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-    
+
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -93,16 +93,27 @@ return hightickets;
 });
 
 
-app.MapGet("/tickets",() =>
+app.MapGet("/tickets",async (HelpdeskDbContext db) =>
 {
-    return tickets; 
+    var tickets = await db.Tickets.AsNoTracking().ToListAsync();
+    return Results.Ok(tickets);
 });
 
 
-app.MapGet("/tickets/{id}", (int id) =>
+app.MapGet("/tickets/{id}",async (int id, HelpdeskDbContext db) =>
 {
-    var ticket = tickets.FirstOrDefault(t => t.Id == id);
-    return ticket is null ? Results.NotFound(new { message = "Ticket nicht gefunden" }) : Results.Ok(ticket);
+
+    var ticket = await db.Tickets.AsNoTracking().FirstOrDefaultAsync(t=> t.Id == id);
+
+    if (ticket is null)
+    {
+        return Results.NotFound(new
+        {
+            message = $"Ticket mit ID {id} wurde nicht gefunden."
+        });
+    }
+
+    return Results.Ok(ticket);
 });
 
 app.MapGet("/open",()=>
@@ -164,9 +175,11 @@ app.MapPut("/tickets/{id}", (int id, TicketUpdateRequest request) =>
     return Results.Ok(ticket);
 });
 
-app.MapDelete("/tickets/{id:int}", (int id) =>
+app.MapDelete("/tickets/{id:int}", async (int id, HelpdeskDbContext  db) =>
 {
-    var ticket = tickets.FirstOrDefault(t => t.Id == id); ; 
+
+    var ticket = await db.Tickets.FindAsync(id);
+
 
     if (ticket is null)
     {
@@ -176,9 +189,10 @@ app.MapDelete("/tickets/{id:int}", (int id) =>
         });
     }
 
-    tickets.Remove(ticket);
+    db.Tickets.Remove(ticket);
+    await db.SaveChangesAsync();
 
-     return Results.NotFound(new { message = $"Ticket mit der  {id} wurde entfernt"  });
+    return Results.NoContent();
 });
 
 app.MapGet("/", () => "Helpdesk API läuft");
