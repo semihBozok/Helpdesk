@@ -151,6 +151,23 @@ app.MapPut("/tickets/{id}", (int id, TicketUpdateRequest request) =>
     return Results.Ok(ticket);
 });
 
+app.MapDelete("/tickets/{id:int}", (int id) =>
+{
+    var ticket = tickets.FirstOrDefault(t => t.Id == id); ; 
+
+    if (ticket is null)
+    {
+        return Results.NotFound(new
+        {
+            message = $"Ticket mit ID {id} wurde nicht gefunden."
+        });
+    }
+
+    tickets.Remove(ticket);
+
+     return Results.NotFound(new { message = $"Ticket mit der  {id} wurde entfernt"  });
+});
+
 app.MapGet("/", () => "Helpdesk API läuft");
 
 app.Run();
