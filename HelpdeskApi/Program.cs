@@ -31,6 +31,7 @@ using (var scope = app.Services.CreateScope())
         .GetRequiredService<HelpdeskDbContext>();
 
     await db.Database.MigrateAsync();
+     await DbSeeder.SeedAsync(db);
 }
 
 // Configure the HTTP request pipeline.
