@@ -32,6 +32,14 @@ public class HelpdeskDbContext : DbContext
         modelBuilder.Entity<Ticket>()
             .HasKey(ticket => ticket.Id);
 
+        modelBuilder.Entity<TicketStatus>()
+            .Property(status => status.Id)
+            .ValueGeneratedNever();
+
+        modelBuilder.Entity<TicketPriority>()
+            .Property(priority => priority.Id)
+            .ValueGeneratedNever();   
+
         modelBuilder.Entity<Ticket>()
             .HasOne(ticket => ticket.Status)
             .WithMany()
@@ -51,5 +59,6 @@ public class HelpdeskDbContext : DbContext
         modelBuilder.Entity<TicketPriority>()
             .HasIndex(priority => priority.Name)
             .IsUnique();
+ 
     }
 }

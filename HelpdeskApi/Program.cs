@@ -35,9 +35,16 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Registriert alle Ticket-Routen
+//bind wwwroot file for css,js,html
+app.UseFileServer();
+
 app.MapTicketEndpoints();
 
-app.MapGet("/", () => "Helpdesk API läuft");
+
+app.MapGet("/api/health", () => Results.Ok(new
+{
+    status = "healthy",
+    timestamp = DateTime.UtcNow
+}));
 
 app.Run();

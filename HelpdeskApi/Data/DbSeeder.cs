@@ -7,6 +7,34 @@ public static class DbSeeder
 {
     public static async Task SeedAsync(HelpdeskDbContext db)
     {
+           if (!await db.TicketStatuses.AnyAsync())
+    {
+        var statuses = new List<TicketStatus>
+        {
+            new() { Id = 1, Name = "Open" },
+            new() { Id = 2, Name = "In Progress" },
+            new() { Id = 3, Name = "Review" },
+            new() { Id = 4, Name = "Closed" }
+        };
+
+        db.TicketStatuses.AddRange(statuses);
+    }
+
+    if (!await db.TicketPriorities.AnyAsync())
+    {
+        var priorities = new List<TicketPriority>
+        {
+            new() { Id = 1, Name = "Low" },
+            new() { Id = 2, Name = "Medium" },
+            new() { Id = 3, Name = "High" },
+            new() { Id = 4, Name = "Critical" }
+        };
+
+        db.TicketPriorities.AddRange(priorities);
+    }
+
+    await db.SaveChangesAsync();
+       
         // Wenn bereits mindestens ein Ticket existiert,
         // werden keine weiteren Mockdaten angelegt.
         if (await db.Tickets.AnyAsync())
@@ -16,24 +44,6 @@ public static class DbSeeder
 
         var now = DateTime.UtcNow;
 
-        var statuses = new List<TicketStatus>
-{
-    new() { Id = 1, Name = "Open" },
-    new() { Id = 2, Name = "In Progress" },
-    new() { Id = 3, Name = "Resolved" },
-    new() { Id = 4, Name = "Closed" }
-};
-
-        var priorities = new List<TicketPriority>
-{
-    new() { Id = 1, Name = "Low" },
-    new() { Id = 2, Name = "Medium" },
-    new() { Id = 3, Name = "High" },
-    new() { Id = 4, Name = "Critical" }
-};
-
-        db.TicketStatuses.AddRange(statuses);
-        db.TicketPriorities.AddRange(priorities);
 
         await db.SaveChangesAsync();
 
@@ -52,7 +62,7 @@ public static class DbSeeder
             {
                 Title = "Drucker im zweiten Stock offline",
                 Description = "Der Netzwerkdrucker reagiert nicht auf Druckaufträge.",
-                StatusId = 1,
+                StatusId = 3,
                 PriorityId = 2,
                 CreatedBy = "Anna",
                 CreatedAt = now.AddHours(-2)
@@ -70,7 +80,7 @@ public static class DbSeeder
             {
                 Title = "Outlook startet nicht",
                 Description = "Outlook bleibt beim Ladebildschirm hängen.",
-                StatusId = 1,
+                StatusId = 3,
                 PriorityId = 3,
                 CreatedBy = "Lisa",
                 CreatedAt = now.AddHours(-7)
@@ -88,7 +98,7 @@ public static class DbSeeder
             {
                 Title = "MFA-Code wird nicht akzeptiert",
                 Description = "Die Anmeldung schlägt trotz korrektem Authenticator-Code fehl.",
-                StatusId = 1,
+                StatusId = 4,
                 PriorityId = 4,
                 CreatedBy = "Sarah",
                 CreatedAt = now.AddHours(-12)
@@ -106,7 +116,7 @@ public static class DbSeeder
             {
                 Title = "SAP-Anmeldung fehlgeschlagen",
                 Description = "Der Benutzer kann sich nicht am SAP-System anmelden.",
-                StatusId = 1,
+                StatusId = 4,
                 PriorityId = 4,
                 CreatedBy = "Daniel",
                 CreatedAt = now.AddDays(-1)
@@ -115,7 +125,7 @@ public static class DbSeeder
             {
                 Title = "Scanner nicht erreichbar",
                 Description = "Der Scanner wird im Firmennetzwerk nicht gefunden.",
-                StatusId = 1,
+                StatusId = 3,
                 PriorityId = 2,
                 CreatedBy = "Julia",
                 CreatedAt = now.AddDays(-1).AddHours(-2)

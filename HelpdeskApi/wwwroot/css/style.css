@@ -1,0 +1,164 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f5f7;
+    color: #172b4d;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 32px;
+    background: white;
+    border-bottom: 1px solid #dfe1e6;
+}
+
+.header h1 {
+    margin: 0;
+}
+
+.header p {
+    margin: 6px 0 0;
+    color: #5e6c84;
+}
+
+button {
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+main {
+    padding: 24px;
+}
+
+.summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.summary article {
+    padding: 16px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #dfe1e6;
+}
+
+.summary span {
+    display: block;
+    color: #5e6c84;
+}
+
+.summary strong {
+    display: block;
+    margin-top: 8px;
+    font-size: 28px;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(220px, 1fr));
+    gap: 16px;
+    align-items: start;
+}
+
+.column {
+    padding: 12px;
+    background: #ebecf0;
+    border-radius: 8px;
+    min-height: 300px;
+}
+
+.column h2 {
+    margin: 4px 4px 16px;
+    font-size: 16px;
+}
+
+.ticket-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ticket-card {
+    padding: 14px;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid #dfe1e6;
+}
+
+.ticket-card h3 {
+    margin: 0 0 8px;
+    font-size: 15px;
+}
+
+.ticket-card p {
+    margin: 0 0 12px;
+    color: #42526e;
+}
+
+.ticket-card small {
+    color: #5e6c84;
+}
+
+@media (max-width: 900px) {
+    .summary,
+    .board {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 550px) {
+    .summary,
+    .board {
+        grid-template-columns: 1fr;
+    }
+
+    .header {
+        align-items: flex-start;
+        gap: 16px;
+        flex-direction: column;
+    }
+    .ticket-list {
+    min-height: 220px;
+    padding: 4px;
+    border: 2px dashed transparent;
+    border-radius: 8px;
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.ticket-list.drag-over {
+    background: #dfe7fd;
+    border-color: #4c6fff;
+}
+
+.ticket-card {
+    cursor: grab;
+    user-select: none;
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease;
+}
+
+.ticket-card:hover {
+    transform: translateY(-2px);
+}
+
+.ticket-card:active {
+    cursor: grabbing;
+}
+
+.ticket-card.dragging {
+    opacity: 0.4;
+}
+}
