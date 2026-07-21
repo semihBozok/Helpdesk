@@ -54,21 +54,18 @@ function updateCounters(tickets) {
         tickets.length;
 
     document.querySelector("#openCount").textContent =
-        tickets.filter(
-            ticket => ticket.statusId === 1
-        ).length;
+        tickets.filter(ticket => ticket.statusId === 1).length;
 
     document.querySelector("#progressCount").textContent =
-        tickets.filter(
-            ticket => ticket.statusId === 2
-        ).length;
+        tickets.filter(ticket => ticket.statusId === 2).length;
 
     document.querySelector("#resolvedCount").textContent =
         tickets.filter(
-            ticket => ticket.statusId === 3
+            ticket =>
+                ticket.statusId === 3 ||
+                ticket.statusId === 4
         ).length;
 }
-
 
 function renderTickets(tickets) {
     for (const ticket of tickets) {
@@ -149,78 +146,83 @@ function createTicketCard(ticket) {
 
 
 function setupDropZones() {
-    const dropZones =
-        document.querySelectorAll(".ticket-list");
+    const columns = document.querySelectorAll(".column");
 
-    for (const dropZone of dropZones) {
-        dropZone.addEventListener("dragover", event => {
-            // Ohne preventDefault wäre Ablegen nicht erlaubt.
+    for (const column of columns) {
+        column.addEventListener("dragover", event => {
             event.preventDefault();
 
             event.dataTransfer.dropEffect = "move";
-
-            dropZone.classList.add("drag-over");
+            column.classList.add("drag-over");
         });
 
-
-        dropZone.addEventListener("dragleave", event => {
-            /*
-             * dragleave kann auch ausgelöst werden,
-             * wenn man nur über ein Kind-Element fährt.
-             */
-            if (!dropZone.contains(event.relatedTarget)) {
-                dropZone.classList.remove("drag-over");
+        column.addEventListener("dragleave", event => {
+            if (!column.contains(event.relatedTarget)) {
+                column.classList.remove("drag-over");
             }
         });
 
-
-        dropZone.addEventListener("drop", async event => {
+        column.addEventListener("drop", async event => {
             event.preventDefault();
-
-            dropZone.classList.remove("drag-over");
+            column.classList.remove("drag-over");
 
             const ticketId = Number(
                 event.dataTransfer.getData("text/plain")
             );
 
             const newStatusId = Number(
-                dropZone.dataset.statusId
+                column.dataset.statusId
             );
 
-            await updateTicketStatus(
-                ticketId,
-                newStatusId
-            );
+            await moveTicket(ticketId, newStatusId, column);
         });
     }
 }
 
 
-async function updateTicketStatus(
+async function moveTicket(
     ticketId,
-    newStatusId
+    newStatusId,
+    targetColumn
 ) {
     const ticket = currentTickets.find(
-        currentTicket =>
-            currentTicket.id === ticketId
+        currentTicket => currentTicket.id === ticketId
     );
 
     if (!ticket) {
         messageElement.textContent =
-            "Das verschobene Ticket wurde nicht gefunden.";
+            `Ticket #${ticketId} wurde nicht gefunden.`;
 
         return;
     }
 
     if (ticket.statusId === newStatusId) {
-        messageElement.textContent =
-            `Ticket #${ticketId} befindet sich bereits in dieser Spalte.`;
-
         return;
     }
 
+    const oldStatusId = ticket.statusId;
+
+    const card = document.querySelector(
+        `[data-ticket-id="${ticketId}"]`
+    );
+
+    const targetList =
+        targetColumn.querySelector(".ticket-list");
+
+    /*
+     * Oberfläche sofort verändern.
+     * Dadurch fühlt sich das Verschieben direkt an.
+     */
+    ticket.statusId = newStatusId;
+
+    if (card && targetList) {
+        targetList.append(card);
+    }
+
+    updateCounters(currentTickets);
+
     messageElement.textContent =
-        `Ticket #${ticketId} wird aktualisiert …`;
+        `Ticket #${ticketId} wird gespeichert …`;
 
     try {
         const response = await fetch(
@@ -237,31 +239,34 @@ async function updateTicketStatus(
         );
 
         if (!response.ok) {
-            const errorBody = await response.text();
+            const errorText = await response.text();
 
             throw new Error(
-                `Status ${response.status}: ${errorBody}`
+                `HTTP ${response.status}: ${errorText}`
             );
         }
 
         const updatedTicket = await response.json();
 
-        messageElement.textContent =
-            `Ticket #${updatedTicket.id} wurde verschoben.`;
-
         /*
-         * Wir laden erneut aus PostgreSQL.
-         * Dadurch zeigt das Board garantiert den
-         * tatsächlich gespeicherten Zustand.
+         * Lokale Daten mit der Antwort der API aktualisieren.
          */
-        await loadTickets();
+        Object.assign(ticket, updatedTicket);
+
+        messageElement.textContent =
+            `Ticket #${ticketId} wurde gespeichert.`;
     } catch (error) {
         console.error(error);
 
-        messageElement.textContent =
-            `Ticket #${ticketId} konnte nicht verschoben werden.`;
+        /*
+         * Bei einem Fehler wieder den echten Zustand
+         * aus PostgreSQL laden.
+         */
+        ticket.statusId = oldStatusId;
 
-        // Ursprünglichen DB-Zustand erneut anzeigen.
+        messageElement.textContent =
+            `Ticket #${ticketId} konnte nicht gespeichert werden.`;
+
         await loadTickets();
     }
 }

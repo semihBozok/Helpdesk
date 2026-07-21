@@ -74,25 +74,35 @@ main {
     padding: 12px;
     background: #ebecf0;
     border-radius: 8px;
-    min-height: 300px;
+    min-height: 380px;
+    border: 2px dashed transparent;
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.column.drag-over {
+    background: #dfe7fd;
+    border-color: #4c6fff;
 }
 
 .column h2 {
     margin: 4px 4px 16px;
     font-size: 16px;
 }
-
 .ticket-list {
+    min-height: 300px;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
 .ticket-card {
-    padding: 14px;
-    background: white;
-    border-radius: 6px;
-    border: 1px solid #dfe1e6;
+    cursor: grab;
+    user-select: none;
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease;
 }
 
 .ticket-card h3 {
@@ -159,6 +169,7 @@ main {
 }
 
 .ticket-card.dragging {
-    opacity: 0.4;
+    opacity: 0.35;
+    transform: scale(0.98);
 }
 }

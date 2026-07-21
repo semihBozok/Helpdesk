@@ -49,45 +49,25 @@
         <p id="message">Tickets werden geladen …</p>
 
         <section id="ticketBoard" class="board">
-    <div class="column">
-        <h2>Open</h2>
+    <div class="column" data-status-id="1">
+    <h2>Open</h2>
+    <div id="status-1" class="ticket-list"></div>
+</div>
 
-        <div
-            id="status-1"
-            class="ticket-list"
-            data-status-id="1">
-        </div>
-    </div>
+<div class="column" data-status-id="2">
+    <h2>In Progress</h2>
+    <div id="status-2" class="ticket-list"></div>
+</div>
 
-    <div class="column">
-        <h2>In Progress</h2>
+<div class="column" data-status-id="3">
+    <h2>Resolved</h2>
+    <div id="status-3" class="ticket-list"></div>
+</div>
 
-        <div
-            id="status-2"
-            class="ticket-list"
-            data-status-id="2">
-        </div>
-    </div>
-
-    <div class="column">
-        <h2>Resolved</h2>
-
-        <div
-            id="status-3"
-            class="ticket-list"
-            data-status-id="3">
-        </div>
-    </div>
-
-    <div class="column">
-        <h2>Closed</h2>
-
-        <div
-            id="status-4"
-            class="ticket-list"
-            data-status-id="4">
-        </div>
-    </div>
+<div class="column" data-status-id="4">
+    <h2>Closed</h2>
+    <div id="status-4" class="ticket-list"></div>
+</div>
 </section>
     </main>
 
