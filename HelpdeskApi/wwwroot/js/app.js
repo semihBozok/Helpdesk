@@ -424,6 +424,18 @@ function createTicketCard(ticket) {
         }
     );
 
+    card.addEventListener("click", event => {
+    /*
+     * Beim Ziehen soll nicht gleichzeitig
+     * das Detailfenster geöffnet werden.
+     */
+    if (card.classList.contains("dragging")) {
+        return;
+    }
+
+    openTicketDetails(ticket);
+});
+
 
     return card;
 }
