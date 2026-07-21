@@ -1,8 +1,19 @@
+/*
+ * -------------------------------------------------------
+ * HTML-ELEMENTE
+ * -------------------------------------------------------
+ */
+
+/* Allgemeines Board */
+
 const messageElement =
     document.querySelector("#message");
 
 const reloadButton =
     document.querySelector("#reloadButton");
+
+
+/* Ticket erstellen */
 
 const createTicketButton =
     document.querySelector("#createTicketButton");
@@ -35,17 +46,76 @@ const ticketCreatedByInput =
     document.querySelector("#ticketCreatedBy");
 
 
+/* Ticketdetails */
+
+const ticketDetailsDialog =
+    document.querySelector("#ticketDetailsDialog");
+
+const ticketDetailsHeading =
+    document.querySelector("#ticketDetailsHeading");
+
+const closeTicketDetailsButton =
+    document.querySelector("#closeTicketDetailsButton");
+
+const cancelTicketDetailsButton =
+    document.querySelector("#cancelTicketDetailsButton");
+
+const ticketDetailsForm =
+    document.querySelector("#ticketDetailsForm");
+
+const detailsTicketId =
+    document.querySelector("#detailsTicketId");
+
+const detailsTitle =
+    document.querySelector("#detailsTitle");
+
+const detailsDescription =
+    document.querySelector("#detailsDescription");
+
+const detailsStatus =
+    document.querySelector("#detailsStatus");
+
+const detailsPriority =
+    document.querySelector("#detailsPriority");
+
+const detailsCreatedBy =
+    document.querySelector("#detailsCreatedBy");
+
+const detailsCreatedAt =
+    document.querySelector("#detailsCreatedAt");
+
+const detailsUpdatedAt =
+    document.querySelector("#detailsUpdatedAt");
+
+const ticketDetailsError =
+    document.querySelector("#ticketDetailsError");
+
+const deleteTicketButton =
+    document.querySelector("#deleteTicketButton");
+
+const saveTicketButton =
+    document.querySelector("#saveTicketButton");
+
+
+/*
+ * Aktuell geladene Tickets.
+ */
 let currentTickets = [];
 
 
 /*
- * Event-Listener
+ * -------------------------------------------------------
+ * EVENT-LISTENER
+ * -------------------------------------------------------
  */
 
 reloadButton.addEventListener(
     "click",
     loadTickets
 );
+
+
+/* Ticket erstellen */
 
 createTicketButton.addEventListener(
     "click",
@@ -67,10 +137,6 @@ createTicketForm.addEventListener(
     createTicket
 );
 
-/*
- * Dialog schließen, wenn neben den eigentlichen
- * Dialoginhalt geklickt wird.
- */
 createTicketDialog.addEventListener(
     "click",
     event => {
@@ -81,12 +147,49 @@ createTicketDialog.addEventListener(
 );
 
 
+/* Ticketdetails */
+
+closeTicketDetailsButton.addEventListener(
+    "click",
+    closeTicketDetails
+);
+
+cancelTicketDetailsButton.addEventListener(
+    "click",
+    closeTicketDetails
+);
+
+ticketDetailsForm.addEventListener(
+    "submit",
+    saveTicketChanges
+);
+
+deleteTicketButton.addEventListener(
+    "click",
+    deleteSelectedTicket
+);
+
+ticketDetailsDialog.addEventListener(
+    "click",
+    event => {
+        if (event.target === ticketDetailsDialog) {
+            closeTicketDetails();
+        }
+    }
+);
+
+
+/*
+ * Anwendung starten.
+ */
 setupDropZones();
 loadTickets();
 
 
 /*
- * Ticket-Erstellung
+ * -------------------------------------------------------
+ * TICKET ERSTELLEN
+ * -------------------------------------------------------
  */
 
 async function openCreateTicketDialog() {
@@ -106,17 +209,16 @@ function closeCreateTicketDialog() {
 
 async function loadPriorities() {
     /*
-     * Wenn bereits Optionen geladen wurden,
-     * müssen sie nicht erneut geladen werden.
+     * Wenn bereits Prioritäten im Dropdown stehen,
+     * nicht noch einmal laden.
      */
     if (prioritySelect.options.length > 1) {
         return;
     }
 
     try {
-        const response = await fetch(
-            "/tickets/priorities"
-        );
+        const response =
+            await fetch("/tickets/priorities");
 
         if (!response.ok) {
             throw new Error(
@@ -124,14 +226,18 @@ async function loadPriorities() {
             );
         }
 
-        const priorities = await response.json();
+        const priorities =
+            await response.json();
 
         for (const priority of priorities) {
             const option =
                 document.createElement("option");
 
-            option.value = priority.id;
-            option.textContent = priority.name;
+            option.value =
+                priority.id;
+
+            option.textContent =
+                priority.name;
 
             prioritySelect.append(option);
         }
@@ -186,22 +292,9 @@ async function createTicket(event) {
         );
 
         if (!response.ok) {
-            let errorMessage =
-                `HTTP-Status ${response.status}`;
-
-            try {
-                const errorBody =
-                    await response.json();
-
-                if (errorBody.message) {
-                    errorMessage =
-                        errorBody.message;
-                }
-            } catch {
-                // Die Antwort enthielt kein JSON.
-            }
-
-            throw new Error(errorMessage);
+            throw new Error(
+                await readErrorMessage(response)
+            );
         }
 
         const createdTicket =
@@ -211,7 +304,7 @@ async function createTicket(event) {
         createTicketForm.reset();
 
         /*
-         * Testbenutzer wieder einsetzen.
+         * Nach reset() wieder Testbenutzer setzen.
          */
         ticketCreatedByInput.value = "Semih";
 
@@ -234,7 +327,9 @@ async function createTicket(event) {
 
 
 /*
- * Tickets laden
+ * -------------------------------------------------------
+ * TICKETS LADEN
+ * -------------------------------------------------------
  */
 
 async function loadTickets() {
@@ -281,7 +376,9 @@ function clearBoard() {
 
 
 /*
- * Statistik
+ * -------------------------------------------------------
+ * ZÄHLER
+ * -------------------------------------------------------
  */
 
 function updateCounters(tickets) {
@@ -299,7 +396,7 @@ function updateCounters(tickets) {
         ).length;
 
     /*
-     * Resolved und Closed zählen beide als erledigt.
+     * Resolved und Closed zählen als erledigt.
      */
     const resolvedCount =
         tickets.filter(
@@ -327,7 +424,9 @@ function updateCounters(tickets) {
 
 
 /*
- * Tickets darstellen
+ * -------------------------------------------------------
+ * TICKETKARTEN DARSTELLEN
+ * -------------------------------------------------------
  */
 
 function renderTickets(tickets) {
@@ -356,6 +455,8 @@ function createTicketCard(ticket) {
     card.className = "ticket-card";
     card.draggable = true;
     card.dataset.ticketId = ticket.id;
+
+    let cardWasDragged = false;
 
 
     const title =
@@ -390,9 +491,29 @@ function createTicketCard(ticket) {
     );
 
 
+    /*
+     * Detailfenster öffnen.
+     */
+    card.addEventListener(
+        "click",
+        () => {
+            if (cardWasDragged) {
+                return;
+            }
+
+            openTicketDetails(ticket.id);
+        }
+    );
+
+
+    /*
+     * Drag starten.
+     */
     card.addEventListener(
         "dragstart",
         event => {
+            cardWasDragged = true;
+
             card.classList.add("dragging");
 
             event.dataTransfer.setData(
@@ -406,35 +527,31 @@ function createTicketCard(ticket) {
     );
 
 
+    /*
+     * Drag beenden.
+     */
     card.addEventListener(
         "dragend",
         () => {
             card.classList.remove("dragging");
 
             const columns =
-                document.querySelectorAll(
-                    ".column"
-                );
+                document.querySelectorAll(".column");
 
             for (const column of columns) {
                 column.classList.remove(
                     "drag-over"
                 );
             }
+
+            window.setTimeout(
+                () => {
+                    cardWasDragged = false;
+                },
+                150
+            );
         }
     );
-
-    card.addEventListener("click", event => {
-    /*
-     * Beim Ziehen soll nicht gleichzeitig
-     * das Detailfenster geöffnet werden.
-     */
-    if (card.classList.contains("dragging")) {
-        return;
-    }
-
-    openTicketDetails(ticket);
-});
 
 
     return card;
@@ -442,7 +559,9 @@ function createTicketCard(ticket) {
 
 
 /*
- * Drag-and-drop
+ * -------------------------------------------------------
+ * DRAG AND DROP
+ * -------------------------------------------------------
  */
 
 function setupDropZones() {
@@ -552,7 +671,7 @@ async function moveTicket(
         );
 
     /*
-     * Karte wird sofort auf der Oberfläche verschoben.
+     * Karte sofort sichtbar verschieben.
      */
     ticket.statusId = newStatusId;
 
@@ -583,20 +702,14 @@ async function moveTicket(
         );
 
         if (!response.ok) {
-            const errorText =
-                await response.text();
-
             throw new Error(
-                `HTTP ${response.status}: ${errorText}`
+                await readErrorMessage(response)
             );
         }
 
         const updatedTicket =
             await response.json();
 
-        /*
-         * Lokales Ticket mit der API-Antwort aktualisieren.
-         */
         Object.assign(
             ticket,
             updatedTicket
@@ -613,10 +726,299 @@ async function moveTicket(
         messageElement.textContent =
             `Ticket #${ticketId} konnte nicht gespeichert werden.`;
 
-        /*
-         * Bei einem Fehler wird der echte Zustand
-         * erneut aus PostgreSQL geladen.
-         */
         await loadTickets();
     }
+}
+
+
+/*
+ * -------------------------------------------------------
+ * TICKETDETAILS LADEN
+ * -------------------------------------------------------
+ */
+
+async function openTicketDetails(ticketId) {
+    ticketDetailsError.textContent = "";
+
+    try {
+        const [
+            ticketResponse,
+            statusesResponse,
+            prioritiesResponse
+        ] = await Promise.all([
+            fetch(`/tickets/${ticketId}`),
+            fetch("/tickets/statuses"),
+            fetch("/tickets/priorities")
+        ]);
+
+        if (!ticketResponse.ok) {
+            throw new Error(
+                "Ticket konnte nicht geladen werden."
+            );
+        }
+
+        if (!statusesResponse.ok) {
+            throw new Error(
+                "Statuswerte konnten nicht geladen werden."
+            );
+        }
+
+        if (!prioritiesResponse.ok) {
+            throw new Error(
+                "Prioritäten konnten nicht geladen werden."
+            );
+        }
+
+        const ticket =
+            await ticketResponse.json();
+
+        const statuses =
+            await statusesResponse.json();
+
+        const priorities =
+            await prioritiesResponse.json();
+
+
+        detailsTicketId.value =
+            ticket.id;
+
+        ticketDetailsHeading.textContent =
+            `Ticket #${ticket.id}`;
+
+        detailsTitle.value =
+            ticket.title;
+
+        detailsDescription.value =
+            ticket.description;
+
+        fillSelect(
+            detailsStatus,
+            statuses,
+            ticket.statusId
+        );
+
+        fillSelect(
+            detailsPriority,
+            priorities,
+            ticket.priorityId
+        );
+
+        detailsCreatedBy.textContent =
+            ticket.createdBy;
+
+        detailsCreatedAt.textContent =
+            formatDate(ticket.createdAt);
+
+        detailsUpdatedAt.textContent =
+            ticket.updatedAt
+                ? formatDate(ticket.updatedAt)
+                : "Noch nicht geändert";
+
+        ticketDetailsDialog.showModal();
+    } catch (error) {
+        console.error(error);
+
+        messageElement.textContent =
+            error.message;
+    }
+}
+
+
+function fillSelect(
+    selectElement,
+    values,
+    selectedId
+) {
+    selectElement.replaceChildren();
+
+    for (const value of values) {
+        const option =
+            document.createElement("option");
+
+        option.value =
+            value.id;
+
+        option.textContent =
+            value.name;
+
+        option.selected =
+            value.id === selectedId;
+
+        selectElement.append(option);
+    }
+}
+
+
+function closeTicketDetails() {
+    ticketDetailsDialog.close();
+    ticketDetailsError.textContent = "";
+}
+
+
+/*
+ * -------------------------------------------------------
+ * TICKET BEARBEITEN
+ * -------------------------------------------------------
+ */
+
+async function saveTicketChanges(event) {
+    event.preventDefault();
+
+    ticketDetailsError.textContent = "";
+
+    saveTicketButton.disabled = true;
+
+    saveTicketButton.textContent =
+        "Wird gespeichert …";
+
+    const ticketId =
+        Number(detailsTicketId.value);
+
+    const requestBody = {
+        title:
+            detailsTitle.value.trim(),
+
+        description:
+            detailsDescription.value.trim(),
+
+        statusId:
+            Number(detailsStatus.value),
+
+        priorityId:
+            Number(detailsPriority.value)
+    };
+
+    try {
+        const response = await fetch(
+            `/tickets/${ticketId}`,
+            {
+                method: "PUT",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify(requestBody)
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                await readErrorMessage(response)
+            );
+        }
+
+        ticketDetailsDialog.close();
+
+        await loadTickets();
+
+        messageElement.textContent =
+            `Ticket #${ticketId} wurde aktualisiert.`;
+    } catch (error) {
+        console.error(error);
+
+        ticketDetailsError.textContent =
+            error.message;
+    } finally {
+        saveTicketButton.disabled = false;
+
+        saveTicketButton.textContent =
+            "Änderungen speichern";
+    }
+}
+
+
+/*
+ * -------------------------------------------------------
+ * TICKET LÖSCHEN
+ * -------------------------------------------------------
+ */
+
+async function deleteSelectedTicket() {
+    const ticketId =
+        Number(detailsTicketId.value);
+
+    const confirmed =
+        window.confirm(
+            `Soll Ticket #${ticketId} wirklich gelöscht werden?`
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+    ticketDetailsError.textContent = "";
+
+    deleteTicketButton.disabled = true;
+
+    deleteTicketButton.textContent =
+        "Wird gelöscht …";
+
+    try {
+        const response = await fetch(
+            `/tickets/${ticketId}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                await readErrorMessage(response)
+            );
+        }
+
+        ticketDetailsDialog.close();
+
+        await loadTickets();
+
+        messageElement.textContent =
+            `Ticket #${ticketId} wurde gelöscht.`;
+    } catch (error) {
+        console.error(error);
+
+        ticketDetailsError.textContent =
+            error.message;
+    } finally {
+        deleteTicketButton.disabled = false;
+
+        deleteTicketButton.textContent =
+            "Ticket löschen";
+    }
+}
+
+
+/*
+ * -------------------------------------------------------
+ * HILFSFUNKTIONEN
+ * -------------------------------------------------------
+ */
+
+async function readErrorMessage(response) {
+    try {
+        const errorBody =
+            await response.json();
+
+        return (
+            errorBody.message ??
+            `HTTP-Status ${response.status}`
+        );
+    } catch {
+        return `HTTP-Status ${response.status}`;
+    }
+}
+
+
+function formatDate(dateValue) {
+    const date =
+        new Date(dateValue);
+
+    return new Intl.DateTimeFormat(
+        "de-DE",
+        {
+            dateStyle: "medium",
+            timeStyle: "short"
+        }
+    ).format(date);
 }
