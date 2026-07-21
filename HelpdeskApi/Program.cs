@@ -13,6 +13,7 @@ builder.Services.AddDbContext<HelpdeskDbContext>(options =>
     options.UseNpgsql(connectionString));
 
 builder.Services.AddOpenApi();
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
@@ -34,7 +35,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.MapHealthChecks("/health");
 //bind wwwroot file for css,js,html
 app.UseFileServer();
 
