@@ -30,8 +30,19 @@ public static class TicketEndpoints
             return Results.Ok(tickets);
         });
 
+// GET /tickets/priorities
+        ticketsGroup.MapGet("/priorities", async (
+                HelpdeskDbContext db) =>
+{
+                var priorities = await db.TicketPriorities
+                 .AsNoTracking()
+                 .OrderBy(priority => priority.Id)
+                 .ToListAsync();
 
-        // GET /tickets/5
+                return Results.Ok(priorities);
+});
+     
+     
         ticketsGroup.MapGet("/{id:int}", async (
             int id,
             HelpdeskDbContext db) =>
@@ -99,7 +110,6 @@ public static class TicketEndpoints
         });
 
 
-        // POST /tickets
         ticketsGroup.MapPost("", async (
             TicketCreateRequest request,
             HelpdeskDbContext db) =>
@@ -171,7 +181,7 @@ public static class TicketEndpoints
         });
 
 
-        // PUT /tickets/5
+        
         ticketsGroup.MapPut("/{id:int}", async (
             int id,
             TicketUpdateRequest request,
@@ -265,7 +275,7 @@ public static class TicketEndpoints
         });
 
 
-        // DELETE /tickets/5
+    
         ticketsGroup.MapDelete("/{id:int}", async (
             int id,
             HelpdeskDbContext db) =>

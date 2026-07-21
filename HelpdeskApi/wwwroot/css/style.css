@@ -9,10 +9,14 @@ body {
     color: #172b4d;
 }
 
+
+/* Header */
+
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 24px;
     padding: 24px 32px;
     background: white;
     border-bottom: 1px solid #dfe1e6;
@@ -27,16 +31,51 @@ body {
     color: #5e6c84;
 }
 
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+
+/* Buttons */
+
 button {
     padding: 10px 16px;
     border: 0;
     border-radius: 6px;
+    background: #dfe1e6;
+    color: #172b4d;
+    font: inherit;
     cursor: pointer;
 }
+
+button:hover {
+    background: #c7cbd1;
+}
+
+.primary-button {
+    background: #0c66e4;
+    color: white;
+}
+
+.primary-button:hover {
+    background: #0055cc;
+}
+
+.primary-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+
+/* Hauptbereich */
 
 main {
     padding: 24px;
 }
+
+
+/* Zusammenfassung */
 
 .summary {
     display: grid;
@@ -48,8 +87,8 @@ main {
 .summary article {
     padding: 16px;
     background: white;
-    border-radius: 8px;
     border: 1px solid #dfe1e6;
+    border-radius: 8px;
 }
 
 .summary span {
@@ -63,19 +102,23 @@ main {
     font-size: 28px;
 }
 
+
+/* Kanban-Board */
+
 .board {
     display: grid;
-    grid-template-columns: repeat(4, minmax(220px, 1fr));
+    grid-template-columns:
+        repeat(4, minmax(220px, 1fr));
     gap: 16px;
     align-items: start;
 }
 
 .column {
+    min-height: 380px;
     padding: 12px;
     background: #ebecf0;
-    border-radius: 8px;
-    min-height: 380px;
     border: 2px dashed transparent;
+    border-radius: 8px;
     transition:
         background-color 0.15s ease,
         border-color 0.15s ease;
@@ -90,6 +133,7 @@ main {
     margin: 4px 4px 16px;
     font-size: 16px;
 }
+
 .ticket-list {
     min-height: 300px;
     display: flex;
@@ -97,12 +141,35 @@ main {
     gap: 10px;
 }
 
+
+/* Ticket-Karten */
+
 .ticket-card {
+    padding: 14px;
+    background: white;
+    border: 1px solid #dfe1e6;
+    border-radius: 6px;
     cursor: grab;
     user-select: none;
     transition:
         opacity 0.15s ease,
-        transform 0.15s ease;
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.ticket-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px
+        rgba(9, 30, 66, 0.14);
+}
+
+.ticket-card:active {
+    cursor: grabbing;
+}
+
+.ticket-card.dragging {
+    opacity: 0.35;
+    transform: scale(0.98);
 }
 
 .ticket-card h3 {
@@ -119,10 +186,116 @@ main {
     color: #5e6c84;
 }
 
+
+/* Dialog */
+
+dialog {
+    width: min(
+        520px,
+        calc(100% - 32px)
+    );
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    background: white;
+    color: #172b4d;
+}
+
+dialog::backdrop {
+    background:
+        rgba(9, 30, 66, 0.55);
+}
+
+.dialog-content {
+    padding: 24px;
+}
+
+.dialog-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.dialog-header h2 {
+    margin: 0;
+}
+
+.dialog-header p {
+    margin: 6px 0 0;
+    color: #5e6c84;
+}
+
+.close-button {
+    align-self: flex-start;
+    padding: 2px 10px;
+    background: transparent;
+    font-size: 26px;
+}
+
+.close-button:hover {
+    background: #ebecf0;
+}
+
+
+/* Ticket-Formular */
+
+#createTicketForm {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#createTicketForm label {
+    margin-top: 8px;
+    font-weight: 600;
+}
+
+#createTicketForm input,
+#createTicketForm textarea,
+#createTicketForm select {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #b3bac5;
+    border-radius: 6px;
+    background: white;
+    color: #172b4d;
+    font: inherit;
+}
+
+#createTicketForm textarea {
+    resize: vertical;
+}
+
+#createTicketForm input:focus,
+#createTicketForm textarea:focus,
+#createTicketForm select:focus {
+    border-color: #0c66e4;
+    outline: 2px solid
+        rgba(12, 102, 228, 0.2);
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.form-error {
+    min-height: 20px;
+    margin: 8px 0 0;
+    color: #ae2a19;
+}
+
+
+/* Responsive Darstellung */
+
 @media (max-width: 900px) {
     .summary,
     .board {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns:
+            repeat(2, 1fr);
     }
 }
 
@@ -134,42 +307,28 @@ main {
 
     .header {
         align-items: flex-start;
+        flex-direction: column;
         gap: 16px;
+    }
+
+    .header-actions {
+        width: 100%;
         flex-direction: column;
     }
+
+    .header-actions button {
+        width: 100%;
+    }
+
     .ticket-list {
-    min-height: 220px;
-    padding: 4px;
-    border: 2px dashed transparent;
-    border-radius: 8px;
-    transition:
-        background-color 0.15s ease,
-        border-color 0.15s ease;
-}
+        min-height: 220px;
+    }
 
-.ticket-list.drag-over {
-    background: #dfe7fd;
-    border-color: #4c6fff;
-}
+    .dialog-actions {
+        flex-direction: column-reverse;
+    }
 
-.ticket-card {
-    cursor: grab;
-    user-select: none;
-    transition:
-        opacity 0.15s ease,
-        transform 0.15s ease;
-}
-
-.ticket-card:hover {
-    transform: translateY(-2px);
-}
-
-.ticket-card:active {
-    cursor: grabbing;
-}
-
-.ticket-card.dragging {
-    opacity: 0.35;
-    transform: scale(0.98);
-}
+    .dialog-actions button {
+        width: 100%;
+    }
 }

@@ -18,9 +18,20 @@
             <p>Tickets verwalten und bearbeiten</p>
         </div>
 
-        <button id="reloadButton" type="button">
-            Neu laden
-        </button>
+      <div class="header-actions">
+    <button
+        id="createTicketButton"
+        class="primary-button"
+        type="button">
+        + Ticket erstellen
+    </button>
+
+    <button
+        id="reloadButton"
+        type="button">
+        Neu laden
+    </button>
+</div>
     </header>
 
     <main>
@@ -70,7 +81,93 @@
 </div>
 </section>
     </main>
+<dialog id="createTicketDialog">
+    <div class="dialog-content">
+        <div class="dialog-header">
+            <div>
+                <h2>Neues Ticket</h2>
+                <p>Beschreibe das Problem möglichst genau.</p>
+            </div>
 
+            <button
+                id="closeTicketDialogButton"
+                class="close-button"
+                type="button"
+                aria-label="Dialog schließen">
+                ×
+            </button>
+        </div>
+
+        <form id="createTicketForm">
+            <label for="ticketTitle">
+                Titel
+            </label>
+
+            <input
+                id="ticketTitle"
+                name="title"
+                type="text"
+                maxlength="150"
+                required>
+
+            <label for="ticketDescription">
+                Beschreibung
+            </label>
+
+            <textarea
+                id="ticketDescription"
+                name="description"
+                rows="5"
+                required>
+            </textarea>
+
+            <label for="ticketPriority">
+                Priorität
+            </label>
+
+            <select
+                id="ticketPriority"
+                name="priorityId"
+                required>
+                <option value="">
+                    Priorität auswählen
+                </option>
+            </select>
+
+            <label for="ticketCreatedBy">
+                Erstellt von
+            </label>
+
+            <input
+                id="ticketCreatedBy"
+                name="createdBy"
+                type="text"
+                value="Semih"
+                required>
+
+            <p
+                id="createTicketError"
+                class="form-error"
+                aria-live="polite">
+            </p>
+
+            <div class="dialog-actions">
+                <button
+                    id="cancelCreateTicketButton"
+                    type="button">
+                    Abbrechen
+                </button>
+
+                <button
+                    id="submitTicketButton"
+                    class="primary-button"
+                    type="submit">
+                    Ticket erstellen
+                </button>
+            </div>
+        </form>
+    </div>
+</dialog>
     <script src="/js/app.js"></script>
 </body>
 </html>
