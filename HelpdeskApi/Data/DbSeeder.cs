@@ -7,6 +7,34 @@ public static class DbSeeder
 {
     public static async Task SeedAsync(HelpdeskDbContext db)
     {
+           if (!await db.TicketStatuses.AnyAsync())
+    {
+        var statuses = new List<TicketStatus>
+        {
+            new() { Id = 1, Name = "Open" },
+            new() { Id = 2, Name = "In Progress" },
+            new() { Id = 3, Name = "Review" },
+            new() { Id = 4, Name = "Closed" }
+        };
+
+        db.TicketStatuses.AddRange(statuses);
+    }
+
+    if (!await db.TicketPriorities.AnyAsync())
+    {
+        var priorities = new List<TicketPriority>
+        {
+            new() { Id = 1, Name = "Low" },
+            new() { Id = 2, Name = "Medium" },
+            new() { Id = 3, Name = "High" },
+            new() { Id = 4, Name = "Critical" }
+        };
+
+        db.TicketPriorities.AddRange(priorities);
+    }
+
+    await db.SaveChangesAsync();
+       
         // Wenn bereits mindestens ein Ticket existiert,
         // werden keine weiteren Mockdaten angelegt.
         if (await db.Tickets.AnyAsync())
@@ -16,14 +44,17 @@ public static class DbSeeder
 
         var now = DateTime.UtcNow;
 
+
+        await db.SaveChangesAsync();
+
         var tickets = new List<Ticket>
         {
             new()
             {
                 Title = "VPN funktioniert nicht",
                 Description = "Die Verbindung zum Firmennetzwerk schlägt fehl.",
-                Status = "Open",
-                Priority = "High",
+                StatusId = 1,
+                PriorityId = 3,
                 CreatedBy = "Semih",
                 CreatedAt = now
             },
@@ -31,8 +62,8 @@ public static class DbSeeder
             {
                 Title = "Drucker im zweiten Stock offline",
                 Description = "Der Netzwerkdrucker reagiert nicht auf Druckaufträge.",
-                Status = "Open",
-                Priority = "Medium",
+                StatusId = 3,
+                PriorityId = 2,
                 CreatedBy = "Anna",
                 CreatedAt = now.AddHours(-2)
             },
@@ -40,8 +71,8 @@ public static class DbSeeder
             {
                 Title = "Passwort zurücksetzen",
                 Description = "Der Benutzer hat sein Windows-Passwort vergessen.",
-                Status = "Resolved",
-                Priority = "Low",
+                StatusId = 2,
+                PriorityId = 1,
                 CreatedBy = "Max",
                 CreatedAt = now.AddHours(-5)
             },
@@ -49,8 +80,8 @@ public static class DbSeeder
             {
                 Title = "Outlook startet nicht",
                 Description = "Outlook bleibt beim Ladebildschirm hängen.",
-                Status = "In Progress",
-                Priority = "High",
+                StatusId = 3,
+                PriorityId = 3,
                 CreatedBy = "Lisa",
                 CreatedAt = now.AddHours(-7)
             },
@@ -58,8 +89,8 @@ public static class DbSeeder
             {
                 Title = "Laptop ist sehr langsam",
                 Description = "Das Gerät reagiert seit dem letzten Update sehr langsam.",
-                Status = "Open",
-                Priority = "Medium",
+                StatusId = 1,
+                PriorityId = 2,
                 CreatedBy = "Thomas",
                 CreatedAt = now.AddHours(-10)
             },
@@ -67,8 +98,8 @@ public static class DbSeeder
             {
                 Title = "MFA-Code wird nicht akzeptiert",
                 Description = "Die Anmeldung schlägt trotz korrektem Authenticator-Code fehl.",
-                Status = "Open",
-                Priority = "Critical",
+                StatusId = 4,
+                PriorityId = 4,
                 CreatedBy = "Sarah",
                 CreatedAt = now.AddHours(-12)
             },
@@ -76,8 +107,8 @@ public static class DbSeeder
             {
                 Title = "Teams-Mikrofon funktioniert nicht",
                 Description = "In Microsoft Teams wird kein Audiosignal erkannt.",
-                Status = "In Progress",
-                Priority = "Medium",
+                StatusId = 1,
+                PriorityId = 2,
                 CreatedBy = "Kevin",
                 CreatedAt = now.AddHours(-15)
             },
@@ -85,8 +116,8 @@ public static class DbSeeder
             {
                 Title = "SAP-Anmeldung fehlgeschlagen",
                 Description = "Der Benutzer kann sich nicht am SAP-System anmelden.",
-                Status = "Open",
-                Priority = "Critical",
+                StatusId = 4,
+                PriorityId = 4,
                 CreatedBy = "Daniel",
                 CreatedAt = now.AddDays(-1)
             },
@@ -94,8 +125,8 @@ public static class DbSeeder
             {
                 Title = "Scanner nicht erreichbar",
                 Description = "Der Scanner wird im Firmennetzwerk nicht gefunden.",
-                Status = "Open",
-                Priority = "Medium",
+                StatusId = 3,
+                PriorityId = 2,
                 CreatedBy = "Julia",
                 CreatedAt = now.AddDays(-1).AddHours(-2)
             },
@@ -103,8 +134,8 @@ public static class DbSeeder
             {
                 Title = "Keine Internetverbindung",
                 Description = "Der Arbeitsplatz hat keine Verbindung zum Internet.",
-                Status = "Resolved",
-                Priority = "Critical",
+                StatusId = 2,
+                PriorityId = 4,
                 CreatedBy = "Michael",
                 CreatedAt = now.AddDays(-1).AddHours(-5)
             },
@@ -112,8 +143,8 @@ public static class DbSeeder
             {
                 Title = "Excel stürzt beim Öffnen ab",
                 Description = "Microsoft Excel beendet sich beim Öffnen einer Datei.",
-                Status = "In Progress",
-                Priority = "High",
+                StatusId = 1,
+                PriorityId = 3,
                 CreatedBy = "Laura",
                 CreatedAt = now.AddDays(-2)
             },
@@ -121,8 +152,8 @@ public static class DbSeeder
             {
                 Title = "Druckauftrag hängt",
                 Description = "Mehrere Druckaufträge bleiben in der Warteschlange.",
-                Status = "Open",
-                Priority = "Low",
+                StatusId = 1,
+                PriorityId = 1,
                 CreatedBy = "Markus",
                 CreatedAt = now.AddDays(-2).AddHours(-3)
             },
@@ -130,8 +161,8 @@ public static class DbSeeder
             {
                 Title = "Netzlaufwerk fehlt",
                 Description = "Das Abteilungslaufwerk wird im Explorer nicht angezeigt.",
-                Status = "Open",
-                Priority = "High",
+                StatusId = 1,
+                PriorityId = 3,
                 CreatedBy = "Stefan",
                 CreatedAt = now.AddDays(-2).AddHours(-7)
             },
@@ -139,8 +170,8 @@ public static class DbSeeder
             {
                 Title = "PC startet sehr langsam",
                 Description = "Der Windows-Start dauert länger als zehn Minuten.",
-                Status = "Closed",
-                Priority = "Low",
+                StatusId = 2,
+                PriorityId = 1,
                 CreatedBy = "Sandra",
                 CreatedAt = now.AddDays(-3)
             },
@@ -148,8 +179,8 @@ public static class DbSeeder
             {
                 Title = "USB-Gerät wird nicht erkannt",
                 Description = "Ein angeschlossenes USB-Gerät erscheint nicht im System.",
-                Status = "Open",
-                Priority = "Medium",
+                StatusId = 1,
+                PriorityId = 2,
                 CreatedBy = "Patrick",
                 CreatedAt = now.AddDays(-3).AddHours(-4)
             },
@@ -157,8 +188,8 @@ public static class DbSeeder
             {
                 Title = "E-Mail-Versand fehlgeschlagen",
                 Description = "Outlook kann keine externen E-Mails versenden.",
-                Status = "Resolved",
-                Priority = "High",
+                StatusId = 2,
+                PriorityId = 3,
                 CreatedBy = "Nicole",
                 CreatedAt = now.AddDays(-4)
             },
@@ -166,8 +197,8 @@ public static class DbSeeder
             {
                 Title = "Benutzerkonto gesperrt",
                 Description = "Das Active-Directory-Konto wurde nach Fehlversuchen gesperrt.",
-                Status = "Open",
-                Priority = "Critical",
+                StatusId = 1,
+                PriorityId = 4,
                 CreatedBy = "David",
                 CreatedAt = now.AddDays(-4).AddHours(-5)
             },
@@ -175,8 +206,8 @@ public static class DbSeeder
             {
                 Title = "WLAN-Verbindung instabil",
                 Description = "Die WLAN-Verbindung bricht regelmäßig ab.",
-                Status = "In Progress",
-                Priority = "Medium",
+                StatusId = 1,
+                PriorityId = 2,
                 CreatedBy = "Tim",
                 CreatedAt = now.AddDays(-5)
             },
@@ -184,8 +215,8 @@ public static class DbSeeder
             {
                 Title = "Windows Update hängt",
                 Description = "Die Installation bleibt dauerhaft bei 30 Prozent stehen.",
-                Status = "Open",
-                Priority = "High",
+                StatusId = 1,
+                PriorityId = 3,
                 CreatedBy = "Sophie",
                 CreatedAt = now.AddDays(-5).AddHours(-6)
             },
@@ -193,8 +224,8 @@ public static class DbSeeder
             {
                 Title = "Browser lädt keine Webseiten",
                 Description = "Chrome zeigt bei allen Webseiten einen Netzwerkfehler.",
-                Status = "Resolved",
-                Priority = "Medium",
+                StatusId = 2,
+                PriorityId = 2,
                 CreatedBy = "Felix",
                 CreatedAt = now.AddDays(-6)
             },
@@ -202,8 +233,8 @@ public static class DbSeeder
             {
                 Title = "Monitor bleibt schwarz",
                 Description = "Der externe Monitor erhält kein Bildsignal.",
-                Status = "Open",
-                Priority = "High",
+                StatusId = 1,
+                PriorityId = 3,
                 CreatedBy = "Nina",
                 CreatedAt = now.AddDays(-6).AddHours(-4)
             },
@@ -211,8 +242,8 @@ public static class DbSeeder
             {
                 Title = "Softwareinstallation benötigt",
                 Description = "Für ein Projekt wird Visual Studio Code benötigt.",
-                Status = "Open",
-                Priority = "Low",
+                StatusId = 1,
+                PriorityId = 1,
                 CreatedBy = "Leon",
                 CreatedAt = now.AddDays(-7)
             },
@@ -220,8 +251,8 @@ public static class DbSeeder
             {
                 Title = "Citrix-Sitzung startet nicht",
                 Description = "Die virtuelle Arbeitsumgebung lässt sich nicht öffnen.",
-                Status = "In Progress",
-                Priority = "Critical",
+                StatusId = 1,
+                PriorityId = 4,
                 CreatedBy = "Marie",
                 CreatedAt = now.AddDays(-8)
             },
@@ -229,8 +260,8 @@ public static class DbSeeder
             {
                 Title = "Kalenderfreigabe fehlt",
                 Description = "Der Teamkalender kann in Outlook nicht geöffnet werden.",
-                Status = "Open",
-                Priority = "Medium",
+                StatusId = 1,
+                PriorityId = 2,
                 CreatedBy = "Jonas",
                 CreatedAt = now.AddDays(-9)
             },
@@ -238,8 +269,8 @@ public static class DbSeeder
             {
                 Title = "Headset wird nicht erkannt",
                 Description = "Das USB-Headset erscheint nicht in den Audiogeräten.",
-                Status = "Closed",
-                Priority = "Low",
+                StatusId = 2,
+                PriorityId = 1,
                 CreatedBy = "Lea",
                 CreatedAt = now.AddDays(-10)
             }

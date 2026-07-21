@@ -1,62 +1,30 @@
-namespace HelpdeskApi.Models
+namespace HelpdeskApi.Models;
+
+public class Ticket
 {
-    public class Ticket
-    {
-        private int _id;
-        private string _title;
-        private string _description;
-        private string _status;
-        private string _priority;
-        private string? _createdBy;
-        private DateTime _createdAt;
-        private DateTime? _updatedAt;
+    public int Id { get; set; }
 
-        public int Id
-        {
-            get => _id;
-            set => _id = value;
-        }
+    public string Title { get; set; } = string.Empty;
 
-        public string Title
-        {
-            get => _title;
-            set => _title = value;
-        }
+    public string Description { get; set; } = string.Empty;
 
-        public string Description
-        {
-            get => _description;
-            set => _description = value;
-        }
 
-        public string Status
-        {
-            get => _status;
-            set => _status = value;
-        }
+    // fk table TicketStatus
+    public int StatusId { get; set; }
 
-        public string Priority
-        {
-            get => _priority;
-            set => _priority = value;
-        }
 
-        public string CreatedBy
-        {
-            get => _createdBy;
-            set => _createdBy = value;
-        }
+    public TicketStatus Status { get; set; } = null!;
 
-        public DateTime CreatedAt
-        {
-            get => _createdAt;
-            set => _createdAt = value;
-        }
+    // fk table TicketPriority  
+    public int PriorityId { get; set; }
 
-        public DateTime? UpdatedAt
-        {
-            get => _updatedAt;
-            set => _updatedAt = value;
-        }
-    }
+  
+    public TicketPriority Priority { get; set; } = null!;
+
+
+    public string CreatedBy { get; set; } = string.Empty;
+
+    public DateTime CreatedAt { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
 }
