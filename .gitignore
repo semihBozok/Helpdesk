@@ -1,6 +1,19 @@
+# Environment
+.env
+
+# .NET
 bin/
 obj/
+
+# User files
 .vscode/
-.env
-.env.*
-!.env.example
+.idea/
+
+# Logs
+*.log
+
+# Node
+node_modules/
+
+# OS
+.DS_Store
