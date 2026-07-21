@@ -42,7 +42,7 @@ public static class TicketEndpoints
         {
             var tickets = await db.Tickets
                 .AsNoTracking()
-                .Where(t => t.Priority == "High")
+                .Where(t => t.PriorityId == 3)
                 .ToListAsync();
 
             return Results.Ok(tickets);
@@ -52,7 +52,7 @@ public static class TicketEndpoints
         {
             var tickets = await db.Tickets
                 .AsNoTracking()
-                .Where(t => t.Status == "Open")
+                .Where(t => t.StatusId == 1)
                 .ToListAsync();
 
             return Results.Ok(tickets);
@@ -62,7 +62,7 @@ public static class TicketEndpoints
         {
             var tickets = await db.Tickets
                 .AsNoTracking()
-                .Where(t => t.Priority == "Critical")
+                .Where(t => t.PriorityId == 4)
                 .ToListAsync();
 
             return Results.Ok(tickets);
@@ -76,11 +76,11 @@ public static class TicketEndpoints
             {
                 Title = request.Title,
                 Description = request.Description,
-                Priority = request.Priority,
-                Status = "Open",
+                StatusId = 1,
+                PriorityId = request.PriorityId,
                 CreatedBy = request.CreatedBy,
                 CreatedAt = DateTime.UtcNow
-            };
+};
 
             db.Tickets.Add(newTicket);
             await db.SaveChangesAsync();
@@ -104,12 +104,13 @@ public static class TicketEndpoints
                     message = $"Ticket mit ID {id} wurde nicht gefunden."
                 });
             }
+            //  ?? value is null, use existing value 
 
-            ticket.Title = request.Title ?? ticket.Title;
-            ticket.Description =
-                request.Description ?? ticket.Description;
-            ticket.Status = request.Status ?? ticket.Status;
-            ticket.Priority = request.Priority ?? ticket.Priority;
+           ticket.Title          = request.Title ?? ticket.Title;
+           ticket.Description    = request.Description ?? ticket.Description;
+           ticket.StatusId       = request.StatusId ?? ticket.StatusId;
+           ticket.PriorityId     = request.PriorityId ?? ticket.PriorityId;
+           ticket.UpdatedAt      = DateTime.UtcNow;
 
             await db.SaveChangesAsync();
 
