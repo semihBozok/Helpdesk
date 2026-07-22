@@ -159,8 +159,7 @@ main {
 
 .ticket-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 3px 8px
-        rgba(9, 30, 66, 0.14);
+    box-shadow: 0 3px 8px rgba(9, 30, 66, 0.14);
 }
 
 .ticket-card:active {
@@ -190,10 +189,8 @@ main {
 /* Dialog */
 
 dialog {
-    width: min(
-        520px,
-        calc(100% - 32px)
-    );
+    width: min(520px,
+            calc(100% - 32px));
     padding: 0;
     border: 0;
     border-radius: 12px;
@@ -271,8 +268,7 @@ dialog::backdrop {
 #createTicketForm textarea:focus,
 #createTicketForm select:focus {
     border-color: #0c66e4;
-    outline: 2px solid
-        rgba(12, 102, 228, 0.2);
+    outline: 2px solid rgba(12, 102, 228, 0.2);
 }
 
 .dialog-actions {
@@ -292,6 +288,7 @@ dialog::backdrop {
 /* Responsive Darstellung */
 
 @media (max-width: 900px) {
+
     .summary,
     .board {
         grid-template-columns:
@@ -300,6 +297,7 @@ dialog::backdrop {
 }
 
 @media (max-width: 550px) {
+
     .summary,
     .board {
         grid-template-columns: 1fr;
@@ -332,6 +330,7 @@ dialog::backdrop {
         width: 100%;
     }
 }
+
 /* Ticket-Detaildialog */
 
 #ticketDetailsDialog {
@@ -454,7 +453,7 @@ dialog::backdrop {
     gap: 7px;
 }
 
-.form-field + .form-field {
+.form-field+.form-field {
     margin-top: 16px;
 }
 
@@ -512,7 +511,7 @@ dialog::backdrop {
     gap: 16px;
 }
 
-.details-grid .form-field + .form-field {
+.details-grid .form-field+.form-field {
     margin-top: 0;
 }
 
@@ -630,7 +629,7 @@ dialog::backdrop {
         grid-template-columns: 1fr;
     }
 
-    .details-grid .form-field + .form-field {
+    .details-grid .form-field+.form-field {
         margin-top: 0;
     }
 
@@ -658,7 +657,7 @@ dialog::backdrop {
     gap: 16px;
 }
 
-.details-grid > div {
+.details-grid>div {
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -710,6 +709,7 @@ dialog::backdrop {
 }
 
 @media (max-width: 550px) {
+
     .details-grid,
     .details-meta {
         grid-template-columns: 1fr;

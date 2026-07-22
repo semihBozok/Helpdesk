@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Helpdesk Board</title>
 
@@ -18,20 +17,15 @@
             <p>Tickets verwalten und bearbeiten</p>
         </div>
 
-      <div class="header-actions">
-    <button
-        id="createTicketButton"
-        class="primary-button"
-        type="button">
-        + Ticket erstellen
-    </button>
+        <div class="header-actions">
+            <button id="createTicketButton" class="primary-button" type="button">
+                + Ticket erstellen
+            </button>
 
-    <button
-        id="reloadButton"
-        type="button">
-        Neu laden
-    </button>
-</div>
+            <button id="reloadButton" type="button">
+                Neu laden
+            </button>
+        </div>
     </header>
 
     <main>
@@ -60,305 +54,248 @@
         <p id="message">Tickets werden geladen …</p>
 
         <section id="ticketBoard" class="board">
-    <div class="column" data-status-id="1">
-    <h2>Open</h2>
-    <div id="status-1" class="ticket-list"></div>
-</div>
-
-<div class="column" data-status-id="2">
-    <h2>In Progress</h2>
-    <div id="status-2" class="ticket-list"></div>
-</div>
-
-<div class="column" data-status-id="3">
-    <h2>Resolved</h2>
-    <div id="status-3" class="ticket-list"></div>
-</div>
-
-<div class="column" data-status-id="4">
-    <h2>Closed</h2>
-    <div id="status-4" class="ticket-list"></div>
-</div>
-</section>
-    </main>
-<dialog id="createTicketDialog">
-    <div class="dialog-content">
-        <div class="dialog-header">
-            <div>
-                <h2>Neues Ticket</h2>
-                <p>Beschreibe das Problem möglichst genau.</p>
+            <div class="column" data-status-id="1">
+                <h2>Open</h2>
+                <div id="status-1" class="ticket-list"></div>
             </div>
 
-            <button
-                id="closeTicketDialogButton"
-                class="close-button"
-                type="button"
-                aria-label="Dialog schließen">
-                ×
-            </button>
-        </div>
+            <div class="column" data-status-id="2">
+                <h2>In Progress</h2>
+                <div id="status-2" class="ticket-list"></div>
+            </div>
 
-        <form id="createTicketForm">
-            <label for="ticketTitle">
-                Titel
-            </label>
+            <div class="column" data-status-id="3">
+                <h2>Resolved</h2>
+                <div id="status-3" class="ticket-list"></div>
+            </div>
 
-            <input
-                id="ticketTitle"
-                name="title"
-                type="text"
-                maxlength="150"
-                required>
+            <div class="column" data-status-id="4">
+                <h2>Closed</h2>
+                <div id="status-4" class="ticket-list"></div>
+            </div>
+        </section>
+    </main>
+    <dialog id="createTicketDialog">
+        <div class="dialog-content">
+            <div class="dialog-header">
+                <div>
+                    <h2>Neues Ticket</h2>
+                    <p>Beschreibe das Problem möglichst genau.</p>
+                </div>
 
-            <label for="ticketDescription">
-                Beschreibung
-            </label>
+                <button id="closeTicketDialogButton" class="close-button" type="button" aria-label="Dialog schließen">
+                    ×
+                </button>
+            </div>
 
-            <textarea
-                id="ticketDescription"
-                name="description"
-                rows="5"
-                required>
+            <form id="createTicketForm">
+                <label for="ticketTitle">
+                    Titel
+                </label>
+
+                <input id="ticketTitle" name="title" type="text" maxlength="150" required>
+
+                <label for="ticketDescription">
+                    Beschreibung
+                </label>
+
+                <textarea id="ticketDescription" name="description" rows="5" required>
             </textarea>
 
-            <label for="ticketPriority">
-                Priorität
-            </label>
+                <label for="ticketPriority">
+                    Priorität
+                </label>
 
-            <select
-                id="ticketPriority"
-                name="priorityId"
-                required>
-                <option value="">
-                    Priorität auswählen
-                </option>
-            </select>
+                <select id="ticketPriority" name="priorityId" required>
+                    <option value="">
+                        Priorität auswählen
+                    </option>
+                </select>
 
-            <label for="ticketCreatedBy">
-                Erstellt von
-            </label>
+                <label for="ticketCreatedBy">
+                    Erstellt von
+                </label>
 
-            <input
-                id="ticketCreatedBy"
-                name="createdBy"
-                type="text"
-                value="Semih"
-                required>
+                <input id="ticketCreatedBy" name="createdBy" type="text" value="Semih" required>
 
-            <p
-                id="createTicketError"
-                class="form-error"
-                aria-live="polite">
-            </p>
-
-            <div class="dialog-actions">
-                <button
-                    id="cancelCreateTicketButton"
-                    type="button">
-                    Abbrechen
-                </button>
-
-                <button
-                    id="submitTicketButton"
-                    class="primary-button"
-                    type="submit">
-                    Ticket erstellen
-                </button>
-            </div>
-        </form>
-    </div>
-</dialog>
-
-<dialog id="ticketDetailsDialog">
-    <div class="ticket-details-container">
-
-        <header class="ticket-details-header">
-            <div class="ticket-details-title">
-                <span class="dialog-eyebrow">
-                    Helpdesk-Ticket
-                </span>
-
-                <h2 id="ticketDetailsHeading">
-                    Ticketdetails
-                </h2>
-
-                <p>
-                    Informationen prüfen, Status ändern oder
-                    das Ticket bearbeiten.
+                <p id="createTicketError" class="form-error" aria-live="polite">
                 </p>
-            </div>
 
-            <button
-                id="closeTicketDetailsButton"
-                class="close-button"
-                type="button"
-                aria-label="Dialog schließen">
-                ×
-            </button>
-        </header>
-
-        <form id="ticketDetailsForm">
-            <input
-                id="detailsTicketId"
-                type="hidden">
-
-            <section class="details-section">
-                <div class="section-heading">
-                    <div class="section-icon">
-                        T
-                    </div>
-
-                    <div>
-                        <h3>Ticketinhalt</h3>
-                        <p>
-                            Titel und genaue Beschreibung des Problems
-                        </p>
-                    </div>
-                </div>
-
-                <div class="form-field">
-                    <label for="detailsTitle">
-                        Titel
-                    </label>
-
-                    <input
-                        id="detailsTitle"
-                        type="text"
-                        maxlength="150"
-                        required>
-                </div>
-
-                <div class="form-field">
-                    <label for="detailsDescription">
-                        Beschreibung
-                    </label>
-
-                    <textarea
-                        id="detailsDescription"
-                        rows="6"
-                        required></textarea>
-                </div>
-            </section>
-
-            <section class="details-section">
-                <div class="section-heading">
-                    <div class="section-icon">
-                        S
-                    </div>
-
-                    <div>
-                        <h3>Klassifizierung</h3>
-                        <p>
-                            Bearbeitungsstatus und Priorität festlegen
-                        </p>
-                    </div>
-                </div>
-
-                <div class="details-grid">
-                    <div class="form-field">
-                        <label for="detailsStatus">
-                            Status
-                        </label>
-
-                        <select
-                            id="detailsStatus"
-                            required>
-                        </select>
-                    </div>
-
-                    <div class="form-field">
-                        <label for="detailsPriority">
-                            Priorität
-                        </label>
-
-                        <select
-                            id="detailsPriority"
-                            required>
-                        </select>
-                    </div>
-                </div>
-            </section>
-
-            <section class="details-section">
-                <div class="section-heading">
-                    <div class="section-icon">
-                        I
-                    </div>
-
-                    <div>
-                        <h3>Ticketinformationen</h3>
-                        <p>
-                            Ersteller und zeitlicher Verlauf
-                        </p>
-                    </div>
-                </div>
-
-                <div class="details-meta">
-                    <article class="meta-card">
-                        <span class="meta-label">
-                            Erstellt von
-                        </span>
-
-                        <strong id="detailsCreatedBy">
-                            –
-                        </strong>
-                    </article>
-
-                    <article class="meta-card">
-                        <span class="meta-label">
-                            Erstellt am
-                        </span>
-
-                        <strong id="detailsCreatedAt">
-                            –
-                        </strong>
-                    </article>
-
-                    <article class="meta-card">
-                        <span class="meta-label">
-                            Zuletzt geändert
-                        </span>
-
-                        <strong id="detailsUpdatedAt">
-                            –
-                        </strong>
-                    </article>
-                </div>
-            </section>
-
-            <p
-                id="ticketDetailsError"
-                class="form-error details-error"
-                aria-live="polite">
-            </p>
-
-            <footer class="ticket-details-footer">
-                <button
-                    id="deleteTicketButton"
-                    class="danger-button"
-                    type="button">
-                    Ticket löschen
-                </button>
-
-                <div class="ticket-details-footer-actions">
-                    <button
-                        id="cancelTicketDetailsButton"
-                        class="secondary-button"
-                        type="button">
+                <div class="dialog-actions">
+                    <button id="cancelCreateTicketButton" type="button">
                         Abbrechen
                     </button>
 
-                    <button
-                        id="saveTicketButton"
-                        class="primary-button"
-                        type="submit">
-                        Änderungen speichern
+                    <button id="submitTicketButton" class="primary-button" type="submit">
+                        Ticket erstellen
                     </button>
                 </div>
-            </footer>
-        </form>
-    </div>
-</dialog>
+            </form>
+        </div>
+    </dialog>
+
+    <dialog id="ticketDetailsDialog">
+        <div class="ticket-details-container">
+
+            <header class="ticket-details-header">
+                <div class="ticket-details-title">
+                    <span class="dialog-eyebrow">
+                        Helpdesk-Ticket
+                    </span>
+
+                    <h2 id="ticketDetailsHeading">
+                        Ticketdetails
+                    </h2>
+
+                    <p>
+                        Informationen prüfen, Status ändern oder
+                        das Ticket bearbeiten.
+                    </p>
+                </div>
+
+                <button id="closeTicketDetailsButton" class="close-button" type="button" aria-label="Dialog schließen">
+                    ×
+                </button>
+            </header>
+
+            <form id="ticketDetailsForm">
+                <input id="detailsTicketId" type="hidden">
+
+                <section class="details-section">
+                    <div class="section-heading">
+                        <div class="section-icon">
+                            T
+                        </div>
+
+                        <div>
+                            <h3>Ticketinhalt</h3>
+                            <p>
+                                Titel und genaue Beschreibung des Problems
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="detailsTitle">
+                            Titel
+                        </label>
+
+                        <input id="detailsTitle" type="text" maxlength="150" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="detailsDescription">
+                            Beschreibung
+                        </label>
+
+                        <textarea id="detailsDescription" rows="6" required></textarea>
+                    </div>
+                </section>
+
+                <section class="details-section">
+                    <div class="section-heading">
+                        <div class="section-icon">
+                            S
+                        </div>
+
+                        <div>
+                            <h3>Klassifizierung</h3>
+                            <p>
+                                Bearbeitungsstatus und Priorität festlegen
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="details-grid">
+                        <div class="form-field">
+                            <label for="detailsStatus">
+                                Status
+                            </label>
+
+                            <select id="detailsStatus" required>
+                            </select>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="detailsPriority">
+                                Priorität
+                            </label>
+
+                            <select id="detailsPriority" required>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="details-section">
+                    <div class="section-heading">
+                        <div class="section-icon">
+                            I
+                        </div>
+
+                        <div>
+                            <h3>Ticketinformationen</h3>
+                            <p>
+                                Ersteller und zeitlicher Verlauf
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="details-meta">
+                        <article class="meta-card">
+                            <span class="meta-label">
+                                Erstellt von
+                            </span>
+
+                            <strong id="detailsCreatedBy">
+                                –
+                            </strong>
+                        </article>
+
+                        <article class="meta-card">
+                            <span class="meta-label">
+                                Erstellt am
+                            </span>
+
+                            <strong id="detailsCreatedAt">
+                                –
+                            </strong>
+                        </article>
+
+                        <article class="meta-card">
+                            <span class="meta-label">
+                                Zuletzt geändert
+                            </span>
+
+                            <strong id="detailsUpdatedAt">
+                                –
+                            </strong>
+                        </article>
+                    </div>
+                </section>
+
+                <p id="ticketDetailsError" class="form-error details-error" aria-live="polite">
+                </p>
+
+                <footer class="ticket-details-footer">
+                    <button id="deleteTicketButton" class="danger-button" type="button">
+                        Ticket löschen
+                    </button>
+
+                    <div class="ticket-details-footer-actions">
+                        <button id="cancelTicketDetailsButton" class="secondary-button" type="button">
+                            Abbrechen
+                        </button>
+
+                        <button id="saveTicketButton" class="primary-button" type="submit">
+                            Änderungen speichern
+                        </button>
+                    </div>
+                </footer>
+            </form>
+        </div>
+    </dialog>
     <script src="/js/app.js"></script>
 </body>
+
 </html>
