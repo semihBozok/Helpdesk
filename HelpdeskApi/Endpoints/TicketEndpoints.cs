@@ -76,7 +76,14 @@ public static class TicketEndpoints
             return Results.Ok(ticket);
         });
 
-
+app.MapGet("/health", () =>
+{
+    return Results.Ok(new
+    {
+        status = "healthy",
+        timestamp = DateTime.UtcNow
+    });
+});
         // GET /tickets/high
         ticketsGroup.MapGet("/high", async (HelpdeskDbContext db) =>
         {
